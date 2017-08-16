@@ -36,7 +36,7 @@ ws_client.addEventListener('message', function(event) {
     // Checks if max duration is > 55 minutes 
     if(message.content) {
         if(message.content.data) {
-            if(message.content.data.chat_duration_max > 3600) {
+            if(message.content.data.chat_duration_max > 3300) {
 
                 if (message.content.data.chat_duration_max / 3600 - minutes >= 1) {
                     minutes++;
