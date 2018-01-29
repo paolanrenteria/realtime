@@ -23,7 +23,7 @@ webHooks.add('overflowtier1', 'https://hooks.zapier.com/hooks/catch/XXXXXXXXX').
 })
 
 // Get token here:
-// https://www.zopim.com/oauth2/authorizations/new?response_type=token&client_id=mp7bIeRL9nNO7nR62NXNyAmThl2lLrzkdP8ITXuqAv1Foxtasx&scope=read&redirect_uri=https%3A%2F%2Flocalhost
+// https://www.zopim.com/oauth2/authorizations/new?response_type=token&client_id=XXXXXXXX&scope=read&redirect_uri=https%3A%2F%2Flocalhost
 
 var ws_client = new WebSocket(
     'wss://rtm.zopim.com/stream', {
