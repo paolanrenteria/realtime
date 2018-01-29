@@ -9,19 +9,26 @@ var webHooks = new WebHooks({
     httpSuccessCodes: [200, 201, 202, 203, 204], //optional success http status codes 
 })
 
-webHooks.add('zapiertest', 'https://hooks.zapier.com/hooks/catch/XXXXXX').then(function(){
+// Webhook for chat overflow that writes to Google Sheets
+webHooks.add('overflowdata', 'https://hooks.zapier.com/hooks/catch/XXXXXXXXX').then(function(){
+    // done 
+    }).catch(function(err){
+    console.log(err)
+})
+
+webHooks.add('overflowtier1', 'https://hooks.zapier.com/hooks/catch/XXXXXXXXX').then(function(){
     // done 
     }).catch(function(err){
     console.log(err)
 })
 
 // Get token here:
-// https://www.zopim.com/oauth2/authorizations/new?response_type=token&client_id=XXXXXXXXXX&scope=read&redirect_uri=https%3A%2F%2Flocalhost
+// https://www.zopim.com/oauth2/authorizations/new?response_type=token&client_id=mp7bIeRL9nNO7nR62NXNyAmThl2lLrzkdP8ITXuqAv1Foxtasx&scope=read&redirect_uri=https%3A%2F%2Flocalhost
 
 var ws_client = new WebSocket(
     'wss://rtm.zopim.com/stream', {
         headers: {
-            'Authorization': 'Bearer ' + 'XXXXXXXXXXXXXXXXXXXX'
+            'Authorization': 'Bearer ' + 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
         }
     }
 );
@@ -29,6 +36,7 @@ var ws_client = new WebSocket(
 var waitingtime = 0;
 var incoming = 0;
 var minutes = 0;
+
 
 ws_client.on('open', function() {
     console.log('Successfully connected');
@@ -85,7 +93,7 @@ ws_client.addEventListener('message', function(event) {
             if( minutes >= 1 && incoming == 2) {
                 console.log('This would post because 2 incoming unassigned chats waiting for ' + minutes + ' minutes');
 
-                webhookUri = "https://hooks.slack.com/services/XXXXXXXXXXX";
+                webhookUri = "https://hooks.slack.com/services/XXXXXXXXX";
 
                 slack = new Slack();
                 slack.setWebhook(webhookUri);
@@ -100,7 +108,7 @@ ws_client.addEventListener('message', function(event) {
 
                 // Trigger Zapier webhook to write to google spreadsheet
                 var d = new Date();
-                webHooks.trigger('zapiertest', {data: {reason: '2+ unassigned in queue', timestamp: d}})
+                webHooks.trigger('overflowdata', {data: {reason: '2+ unassigned in queue', timestamp: d}})
 
             }
 
@@ -108,7 +116,7 @@ ws_client.addEventListener('message', function(event) {
                 console.log('This would post to overflow channel because of 5 minute wait');
                 console.log('Posting to Chat Overflow')
                 // This posts to overflow channel
-                webhookUri = "https://hooks.slack.com/services/XXXXXXXXXXX";
+                webhookUri = "https://hooks.slack.com/services/XXXXXXXXX";
 
                 slack = new Slack();
                 slack.setWebhook(webhookUri);
@@ -123,16 +131,35 @@ ws_client.addEventListener('message', function(event) {
 
                 // Trigger Zapier webhook to write to google spreadsheet
                 var d = new Date();
-                webHooks.trigger('zapiertest', {data: {reason: '5 min wait time', timestamp: d}})
+                webHooks.trigger('overflowdata', {data: {reason: '5 min wait time', timestamp: d}})
 
             }
-            else if ( minutes == 2 ) {
-                console.log('Do nothing because 2 minute wait and only 1 chat waiting');
+
+            else if ( minutes <= 2 || (minutes == 1 && incoming < 2)) {
+                // Today's date + day of week + hour
+                var d = new Date();
+                var n = d.getDay();
+                var t = d.getHours();
+                // Checking conditions for Vince T/W/F 8am-11am Pacific time    
+                if ((n == 2 || n == 3 || n == 5) && (t >= 8 && t <= 11)) {
+                    webHooks.trigger('overflowtier1', {data: {reason: 'vincent@looker.com', timestamp: d}})
+                    console.log('This will ping Vince');
+                }
+
+                // Checking conditions for Sam T/R/F 11am-2pm Pacific time
+                else if ((n == 2 || n == 4 || n == 5) && (t >= 11 && t <= 14)) {
+
+                webHooks.trigger('overflowtier1', {data: {reason: 'sam@looker.com', timestamp: d}})
+                console.log('This will ping Sam');
+                }
+                else {
+                    console.log('do nothing')
+                }
             }
 
             else {
                 console.log('Post to chat channel because of 3 minutes wait or 4, or 6');
-                webhookUri = "https://hooks.slack.com/services/XXXXXXXXXXX";
+                webhookUri = "https://hooks.slack.com/services/XXXXXXXXXXXXXXXXXX";
 
                 slack = new Slack();
                 slack.setWebhook(webhookUri);
@@ -147,7 +174,7 @@ ws_client.addEventListener('message', function(event) {
 
                 // Trigger Zapier webhook to write to google spreadsheet
                 var d = new Date();
-                webHooks.trigger('zapiertest', {data: {reason: '2+ unassigned in queue', timestamp: d}})
+                webHooks.trigger('overflowdata', {data: {reason: '2+ unassigned in queue', timestamp: d}})
             }
         }
 
