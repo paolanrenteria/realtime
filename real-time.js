@@ -140,14 +140,14 @@ ws_client.addEventListener('message', function(event) {
                 var d = new Date();
                 var n = d.getDay();
                 var t = d.getHours();
-                // Checking conditions for Vince T/W/F 8am-11am Pacific time    
-                if ((n == 2 || n == 3 || n == 5) && (t >= 16 && t <= 19)) {
+                // Checking conditions for Vince T/W/F 8am-10:59am Pacific time    
+                if ((n == 2 || n == 3 || n == 5) && (t >= 16 && t <= 18)) {
                     webHooks.trigger('overflowtier1', {data: {reason: 'vincent@looker.com', timestamp: d}})
                     console.log('This will ping Vince');
                 }
 
-                // Checking conditions for Sam T/R/F 11am-2pm Pacific time
-                else if ((n == 2 || n == 4 || n == 5) && (t >= 19 && t <= 22)) {
+                // Checking conditions for Sam T/R/F 11am-1:59pm Pacific time
+                else if ((n == 2 || n == 4 || n == 5) && (t >= 19 && t <= 21)) {
 
                 webHooks.trigger('overflowtier1', {data: {reason: 'sam@looker.com', timestamp: d}})
                 console.log('This will ping Sam');
