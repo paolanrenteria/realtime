@@ -146,8 +146,8 @@ ws_client.addEventListener('message', function(event) {
                     console.log('This will ping Vince');
                 }
 
-                // Checking conditions for Sam T/R/F 11am-1:59pm Pacific time
-                else if ((n == 2 || n == 4 || n == 5) && (t >= 19 && t <= 21)) {
+                // Checking conditions for Sam T/W/F 11am-1:59pm Pacific time
+                else if ((n == 2 || n == 3 || n == 5) && (t >= 19 && t <= 21)) {
 
                 webHooks.trigger('overflowtier1', {data: {reason: 'sam@looker.com', timestamp: d}})
                 console.log('This will ping Sam');
